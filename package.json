@@ -1,36 +1,56 @@
 {
-  "name": "@pkgjs/parseargs",
-  "version": "0.11.0",
-  "description": "Polyfill of future proposal for `util.parseArgs()`",
-  "engines": {
-    "node": ">=14"
-  },
-  "main": "index.js",
-  "exports": {
-    ".": "./index.js",
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "coverage": "c8 --check-coverage tape 'test/*.js'",
-    "test": "c8 tape 'test/*.js'",
-    "posttest": "eslint .",
-    "fix": "npm run posttest -- --fix"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:pkgjs/parseargs.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pkgjs/parseargs/issues"
-  },
-  "homepage": "https://github.com/pkgjs/parseargs#readme",
-  "devDependencies": {
-    "c8": "^7.10.0",
-    "eslint": "^8.2.0",
-    "eslint-plugin-node-core": "iansu/eslint-plugin-node-core",
-    "tape": "^5.2.2"
-  }
+	"name": "ansi-styles",
+	"version": "4.3.0",
+	"description": "ANSI escape codes for styling strings in the terminal",
+	"license": "MIT",
+	"repository": "chalk/ansi-styles",
+	"funding": "https://github.com/chalk/ansi-styles?sponsor=1",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd",
+		"screenshot": "svg-term --command='node screenshot' --out=screenshot.svg --padding=3 --width=55 --height=3 --at=1000 --no-cursor"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"ansi",
+		"styles",
+		"color",
+		"colour",
+		"colors",
+		"terminal",
+		"console",
+		"cli",
+		"string",
+		"tty",
+		"escape",
+		"formatting",
+		"rgb",
+		"256",
+		"shell",
+		"xterm",
+		"log",
+		"logging",
+		"command-line",
+		"text"
+	],
+	"dependencies": {
+		"color-convert": "^2.0.1"
+	},
+	"devDependencies": {
+		"@types/color-convert": "^1.9.0",
+		"ava": "^2.3.0",
+		"svg-term-cli": "^2.1.1",
+		"tsd": "^0.11.0",
+		"xo": "^0.25.3"
+	}
 }

@@ -1,413 +1,315 @@
-<!-- omit in toc -->
-# parseArgs
+# ansi-colors [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=W8YFZ425KND68) [![NPM version](https://img.shields.io/npm/v/ansi-colors.svg?style=flat)](https://www.npmjs.com/package/ansi-colors) [![NPM monthly downloads](https://img.shields.io/npm/dm/ansi-colors.svg?style=flat)](https://npmjs.org/package/ansi-colors) [![NPM total downloads](https://img.shields.io/npm/dt/ansi-colors.svg?style=flat)](https://npmjs.org/package/ansi-colors) [![Linux Build Status](https://img.shields.io/travis/doowb/ansi-colors.svg?style=flat&label=Travis)](https://travis-ci.org/doowb/ansi-colors)
 
-[![Coverage][coverage-image]][coverage-url]
+> Easily add ANSI colors to your text and symbols in the terminal. A faster drop-in replacement for chalk, kleur and turbocolor (without the dependencies and rendering bugs).
 
-Polyfill of `util.parseArgs()`
+Please consider following this project's author, [Brian Woodward](https://github.com/doowb), and consider starring the project to show your :heart: and support.
 
-## `util.parseArgs([config])`
+## Install
 
-<!-- YAML
-added: v18.3.0
-changes:
-  - version: REPLACEME
-    pr-url: https://github.com/nodejs/node/pull/43459
-    description: add support for returning detailed parse information
-                 using `tokens` in input `config` and returned properties.
--->
+Install with [npm](https://www.npmjs.com/):
 
-> Stability: 1 - Experimental
-
-* `config` {Object} Used to provide arguments for parsing and to configure
-  the parser. `config` supports the following properties:
-  * `args` {string\[]} array of argument strings. **Default:** `process.argv`
-    with `execPath` and `filename` removed.
-  * `options` {Object} Used to describe arguments known to the parser.
-    Keys of `options` are the long names of options and values are an
-    {Object} accepting the following properties:
-    * `type` {string} Type of argument, which must be either `boolean` or `string`.
-    * `multiple` {boolean} Whether this option can be provided multiple
-      times. If `true`, all values will be collected in an array. If
-      `false`, values for the option are last-wins. **Default:** `false`.
-    * `short` {string} A single character alias for the option.
-    * `default` {string | boolean | string\[] | boolean\[]} The default option
-      value when it is not set by args. It must be of the same type as the
-      the `type` property. When `multiple` is `true`, it must be an array.
-  * `strict` {boolean} Should an error be thrown when unknown arguments
-    are encountered, or when arguments are passed that do not match the
-    `type` configured in `options`.
-    **Default:** `true`.
-  * `allowPositionals` {boolean} Whether this command accepts positional
-    arguments.
-    **Default:** `false` if `strict` is `true`, otherwise `true`.
-  * `tokens` {boolean} Return the parsed tokens. This is useful for extending
-    the built-in behavior, from adding additional checks through to reprocessing
-    the tokens in different ways.
-    **Default:** `false`.
-
-* Returns: {Object} The parsed command line arguments:
-  * `values` {Object} A mapping of parsed option names with their {string}
-    or {boolean} values.
-  * `positionals` {string\[]} Positional arguments.
-  * `tokens` {Object\[] | undefined} See [parseArgs tokens](#parseargs-tokens)
-    section. Only returned if `config` includes `tokens: true`.
-
-Provides a higher level API for command-line argument parsing than interacting
-with `process.argv` directly. Takes a specification for the expected arguments
-and returns a structured object with the parsed options and positionals.
-
-```mjs
-import { parseArgs } from 'node:util';
-const args = ['-f', '--bar', 'b'];
-const options = {
-  foo: {
-    type: 'boolean',
-    short: 'f'
-  },
-  bar: {
-    type: 'string'
-  }
-};
-const {
-  values,
-  positionals
-} = parseArgs({ args, options });
-console.log(values, positionals);
-// Prints: [Object: null prototype] { foo: true, bar: 'b' } []
+```sh
+$ npm install --save ansi-colors
 ```
 
-```cjs
-const { parseArgs } = require('node:util');
-const args = ['-f', '--bar', 'b'];
-const options = {
-  foo: {
-    type: 'boolean',
-    short: 'f'
-  },
-  bar: {
-    type: 'string'
-  }
-};
-const {
-  values,
-  positionals
-} = parseArgs({ args, options });
-console.log(values, positionals);
-// Prints: [Object: null prototype] { foo: true, bar: 'b' } []
-```
+![image](https://user-images.githubusercontent.com/383994/39635445-8a98a3a6-4f8b-11e8-89c1-068c45d4fff8.png)
 
-`util.parseArgs` is experimental and behavior may change. Join the
-conversation in [pkgjs/parseargs][] to contribute to the design.
+## Why use this?
 
-### `parseArgs` `tokens`
+ansi-colors is _the fastest Node.js library for terminal styling_. A more performant drop-in replacement for chalk, with no dependencies.
 
-Detailed parse information is available for adding custom behaviours by
-specifying `tokens: true` in the configuration.
-The returned tokens have properties describing:
+* _Blazing fast_ - Fastest terminal styling library in node.js, 10-20x faster than chalk!
 
-* all tokens
-  * `kind` {string} One of 'option', 'positional', or 'option-terminator'.
-  * `index` {number} Index of element in `args` containing token. So the
-    source argument for a token is `args[token.index]`.
-* option tokens
-  * `name` {string} Long name of option.
-  * `rawName` {string} How option used in args, like `-f` of `--foo`.
-  * `value` {string | undefined} Option value specified in args.
-    Undefined for boolean options.
-  * `inlineValue` {boolean | undefined} Whether option value specified inline,
-    like `--foo=bar`.
-* positional tokens
-  * `value` {string} The value of the positional argument in args (i.e. `args[index]`).
-* option-terminator token
+* _Drop-in replacement_ for [chalk](https://github.com/chalk/chalk).
+* _No dependencies_ (Chalk has 7 dependencies in its tree!)
 
-The returned tokens are in the order encountered in the input args. Options
-that appear more than once in args produce a token for each use. Short option
-groups like `-xy` expand to a token for each option. So `-xxx` produces
-three tokens.
+* _Safe_ - Does not modify the `String.prototype` like [colors](https://github.com/Marak/colors.js).
+* Supports [nested colors](#nested-colors), **and does not have the [nested styling bug](#nested-styling-bug) that is present in [colorette](https://github.com/jorgebucaran/colorette), [chalk](https://github.com/chalk/chalk), and [kleur](https://github.com/lukeed/kleur)**.
+* Supports [chained colors](#chained-colors).
+* [Toggle color support](#toggle-color-support) on or off.
 
-For example to use the returned tokens to add support for a negated option
-like `--no-color`, the tokens can be reprocessed to change the value stored
-for the negated option.
-
-```mjs
-import { parseArgs } from 'node:util';
-
-const options = {
-  'color': { type: 'boolean' },
-  'no-color': { type: 'boolean' },
-  'logfile': { type: 'string' },
-  'no-logfile': { type: 'boolean' },
-};
-const { values, tokens } = parseArgs({ options, tokens: true });
-
-// Reprocess the option tokens and overwrite the returned values.
-tokens
-  .filter((token) => token.kind === 'option')
-  .forEach((token) => {
-    if (token.name.startsWith('no-')) {
-      // Store foo:false for --no-foo
-      const positiveName = token.name.slice(3);
-      values[positiveName] = false;
-      delete values[token.name];
-    } else {
-      // Resave value so last one wins if both --foo and --no-foo.
-      values[token.name] = token.value ?? true;
-    }
-  });
-
-const color = values.color;
-const logfile = values.logfile ?? 'default.log';
-
-console.log({ logfile, color });
-```
-
-```cjs
-const { parseArgs } = require('node:util');
-
-const options = {
-  'color': { type: 'boolean' },
-  'no-color': { type: 'boolean' },
-  'logfile': { type: 'string' },
-  'no-logfile': { type: 'boolean' },
-};
-const { values, tokens } = parseArgs({ options, tokens: true });
-
-// Reprocess the option tokens and overwrite the returned values.
-tokens
-  .filter((token) => token.kind === 'option')
-  .forEach((token) => {
-    if (token.name.startsWith('no-')) {
-      // Store foo:false for --no-foo
-      const positiveName = token.name.slice(3);
-      values[positiveName] = false;
-      delete values[token.name];
-    } else {
-      // Resave value so last one wins if both --foo and --no-foo.
-      values[token.name] = token.value ?? true;
-    }
-  });
-
-const color = values.color;
-const logfile = values.logfile ?? 'default.log';
-
-console.log({ logfile, color });
-```
-
-Example usage showing negated options, and when an option is used
-multiple ways then last one wins.
-
-```console
-$ node negate.js
-{ logfile: 'default.log', color: undefined }
-$ node negate.js --no-logfile --no-color
-{ logfile: false, color: false }
-$ node negate.js --logfile=test.log --color
-{ logfile: 'test.log', color: true }
-$ node negate.js --no-logfile --logfile=test.log --color --no-color
-{ logfile: 'test.log', color: false }
-```
-
------
-
-<!-- omit in toc -->
-## Table of Contents
-- [`util.parseArgs([config])`](#utilparseargsconfig)
-- [Scope](#scope)
-- [Version Matchups](#version-matchups)
-- [🚀 Getting Started](#-getting-started)
-- [🙌 Contributing](#-contributing)
-- [💡 `process.mainArgs` Proposal](#-processmainargs-proposal)
-  - [Implementation:](#implementation)
-- [📃 Examples](#-examples)
-- [F.A.Qs](#faqs)
-- [Links & Resources](#links--resources)
-
------
-
-## Scope
-
-It is already possible to build great arg parsing modules on top of what Node.js provides; the prickly API is abstracted away by these modules. Thus, process.parseArgs() is not necessarily intended for library authors; it is intended for developers of simple CLI tools, ad-hoc scripts, deployed Node.js applications, and learning materials.
-
-It is exceedingly difficult to provide an API which would both be friendly to these Node.js users while being extensible enough for libraries to build upon. We chose to prioritize these use cases because these are currently not well-served by Node.js' API.
-
-----
-
-## Version Matchups
-
-| Node.js | @pkgjs/parseArgs |
-| -- | -- |
-| [v18.3.0](https://nodejs.org/docs/latest-v18.x/api/util.html#utilparseargsconfig) | [v0.9.1](https://github.com/pkgjs/parseargs/tree/v0.9.1#utilparseargsconfig) |
-| [v16.17.0](https://nodejs.org/dist/latest-v16.x/docs/api/util.html#utilparseargsconfig), [v18.7.0](https://nodejs.org/docs/latest-v18.x/api/util.html#utilparseargsconfig) | [0.10.0](https://github.com/pkgjs/parseargs/tree/v0.10.0#utilparseargsconfig) |
-
-----
-
-## 🚀 Getting Started
-
-1. **Install dependencies.**
-
-   ```bash
-   npm install
-   ```
-
-2. **Open the index.js file and start editing!**
-
-3. **Test your code by calling parseArgs through our test file**
-
-   ```bash
-   npm test
-   ```
-
-----
-
-## 🙌 Contributing
-
-Any person who wants to contribute to the initiative is welcome! Please first read the [Contributing Guide](CONTRIBUTING.md)
-
-Additionally, reading the [`Examples w/ Output`](#-examples-w-output) section of this document will be the best way to familiarize yourself with the target expected behavior for parseArgs() once it is fully implemented.
-
-This package was implemented using [tape](https://www.npmjs.com/package/tape) as its test harness.
-
-----
-
-## 💡 `process.mainArgs` Proposal
-
-> Note: This can be moved forward independently of the `util.parseArgs()` proposal/work.
-
-### Implementation:
-
-```javascript
-process.mainArgs = process.argv.slice(process._exec ? 1 : 2)
-```
-
-----
-
-## 📃 Examples
+## Usage
 
 ```js
-const { parseArgs } = require('@pkgjs/parseargs');
+const c = require('ansi-colors');
+
+console.log(c.red('This is a red string!'));
+console.log(c.green('This is a red string!'));
+console.log(c.cyan('This is a cyan string!'));
+console.log(c.yellow('This is a yellow string!'));
 ```
+
+![image](https://user-images.githubusercontent.com/383994/39653848-a38e67da-4fc0-11e8-89ae-98c65ebe9dcf.png)
+
+## Chained colors
 
 ```js
-const { parseArgs } = require('@pkgjs/parseargs');
-// specify the options that may be used
-const options = {
-  foo: { type: 'string'},
-  bar: { type: 'boolean' },
-};
-const args = ['--foo=a', '--bar'];
-const { values, positionals } = parseArgs({ args, options });
-// values = { foo: 'a', bar: true }
-// positionals = []
+console.log(c.bold.red('this is a bold red message'));
+console.log(c.bold.yellow.italic('this is a bold yellow italicized message'));
+console.log(c.green.bold.underline('this is a bold green underlined message'));
 ```
+
+![image](https://user-images.githubusercontent.com/383994/39635780-7617246a-4f8c-11e8-89e9-05216cc54e38.png)
+
+## Nested colors
 
 ```js
-const { parseArgs } = require('@pkgjs/parseargs');
-// type:string & multiple
-const options = {
-  foo: {
-    type: 'string',
-    multiple: true,
-  },
-};
-const args = ['--foo=a', '--foo', 'b'];
-const { values, positionals } = parseArgs({ args, options });
-// values = { foo: [ 'a', 'b' ] }
-// positionals = []
+console.log(c.yellow(`foo ${c.red.bold('red')} bar ${c.cyan('cyan')} baz`));
 ```
+
+![image](https://user-images.githubusercontent.com/383994/39635817-8ed93d44-4f8c-11e8-8afd-8c3ea35f5fbe.png)
+
+### Nested styling bug
+
+`ansi-colors` does not have the nested styling bug found in [colorette](https://github.com/jorgebucaran/colorette), [chalk](https://github.com/chalk/chalk), and [kleur](https://github.com/lukeed/kleur).
 
 ```js
-const { parseArgs } = require('@pkgjs/parseargs');
-// shorts
-const options = {
-  foo: {
-    short: 'f',
-    type: 'boolean'
-  },
-};
-const args = ['-f', 'b'];
-const { values, positionals } = parseArgs({ args, options, allowPositionals: true });
-// values = { foo: true }
-// positionals = ['b']
+const { bold, red } = require('ansi-styles');
+console.log(bold(`foo ${red.dim('bar')} baz`));
+
+const colorette = require('colorette');
+console.log(colorette.bold(`foo ${colorette.red(colorette.dim('bar'))} baz`));
+
+const kleur = require('kleur');
+console.log(kleur.bold(`foo ${kleur.red.dim('bar')} baz`));
+
+const chalk = require('chalk');
+console.log(chalk.bold(`foo ${chalk.red.dim('bar')} baz`));
 ```
+
+**Results in the following**
+
+(sans icons and labels)
+
+![image](https://user-images.githubusercontent.com/383994/47280326-d2ee0580-d5a3-11e8-9611-ea6010f0a253.png)
+
+## Toggle color support
+
+Easily enable/disable colors.
 
 ```js
-const { parseArgs } = require('@pkgjs/parseargs');
-// unconfigured
-const options = {};
-const args = ['-f', '--foo=a', '--bar', 'b'];
-const { values, positionals } = parseArgs({ strict: false, args, options, allowPositionals: true });
-// values = { f: true, foo: 'a', bar: true }
-// positionals = ['b']
+const c = require('ansi-colors');
+
+// disable colors manually
+c.enabled = false;
+
+// or use a library to automatically detect support
+c.enabled = require('color-support').hasBasic;
+
+console.log(c.red('I will only be colored red if the terminal supports colors'));
 ```
 
-----
+## Strip ANSI codes
 
-## F.A.Qs
+Use the `.unstyle` method to strip ANSI codes from a string.
 
-- Is `cmd --foo=bar baz` the same as `cmd baz --foo=bar`?
-  - yes
-- Does the parser execute a function?
-  - no
-- Does the parser execute one of several functions, depending on input?
-  - no
-- Can subcommands take options that are distinct from the main command?
-  - no
-- Does it output generated help when no options match?
-  - no
-- Does it generated short usage?  Like: `usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]`
-  - no (no usage/help at all)
-- Does the user provide the long usage text?  For each option?  For the whole command?
-  - no
-- Do subcommands (if implemented) have their own usage output?
-  - no
-- Does usage print if the user runs `cmd --help`?
-  - no
-- Does it set `process.exitCode`?
-  - no
-- Does usage print to stderr or stdout?
-  - N/A
-- Does it check types?  (Say, specify that an option is a boolean, number, etc.)
-  - no
-- Can an option have more than one type?  (string or false, for example)
-  - no
-- Can the user define a type?  (Say, `type: path` to call `path.resolve()` on the argument.)
-  - no
-- Does a `--foo=0o22` mean 0, 22, 18, or "0o22"?
-  - `"0o22"`
-- Does it coerce types?
-  - no
-- Does `--no-foo` coerce to `--foo=false`?  For all options?  Only boolean options?
-  - no, it sets `{values:{'no-foo': true}}`
-- Is `--foo` the same as `--foo=true`?  Only for known booleans?  Only at the end?
-  - no, they are not the same. There is no special handling of `true` as a value so it is just another string.
-- Does it read environment variables?  Ie, is `FOO=1 cmd` the same as `cmd --foo=1`?
-  - no
-- Do unknown arguments raise an error?  Are they parsed?  Are they treated as positional arguments?
-  - no, they are parsed, not treated as positionals
-- Does `--` signal the end of options?
-  - yes
-- Is `--` included as a positional?
-  - no
-- Is `program -- foo` the same as `program foo`?
-  - yes, both store `{positionals:['foo']}`
-- Does the API specify whether a `--` was present/relevant?
-  - no
-- Is `-bar` the same as `--bar`?
-  - no, `-bar` is a short option or options, with expansion logic that follows the
-    [Utility Syntax Guidelines in POSIX.1-2017](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html). `-bar` expands to `-b`, `-a`, `-r`.
-- Is `---foo` the same as `--foo`?
-  - no
-  - the first is a long option named `'-foo'`
-  - the second is a long option named `'foo'`
-- Is `-` a positional? ie, `bash some-test.sh | tap -`
-  - yes
+```js
+console.log(c.unstyle(c.blue.bold('foo bar baz')));
+//=> 'foo bar baz'
+```
 
-## Links & Resources
+## Available styles
 
-* [Initial Tooling Issue](https://github.com/nodejs/tooling/issues/19)
-* [Initial Proposal](https://github.com/nodejs/node/pull/35015)
-* [parseArgs Proposal](https://github.com/nodejs/node/pull/42675)
+**Note** that bright and bright-background colors are not always supported.
 
-[coverage-image]: https://img.shields.io/nycrc/pkgjs/parseargs
-[coverage-url]: https://github.com/pkgjs/parseargs/blob/main/.nycrc
-[pkgjs/parseargs]: https://github.com/pkgjs/parseargs
+| Colors  | Background Colors | Bright Colors | Bright Background Colors |
+| ------- | ----------------- | ------------- | ------------------------ |
+| black   | bgBlack           | blackBright   | bgBlackBright            |
+| red     | bgRed             | redBright     | bgRedBright              |
+| green   | bgGreen           | greenBright   | bgGreenBright            |
+| yellow  | bgYellow          | yellowBright  | bgYellowBright           |
+| blue    | bgBlue            | blueBright    | bgBlueBright             |
+| magenta | bgMagenta         | magentaBright | bgMagentaBright          |
+| cyan    | bgCyan            | cyanBright    | bgCyanBright             |
+| white   | bgWhite           | whiteBright   | bgWhiteBright            |
+| gray    |                   |               |                          |
+| grey    |                   |               |                          |
+
+_(`gray` is the U.S. spelling, `grey` is more commonly used in the Canada and U.K.)_
+
+### Style modifiers
+
+* dim
+* **bold**
+
+* hidden
+* _italic_
+
+* underline
+* inverse
+* ~~strikethrough~~
+
+* reset
+
+## Aliases
+
+Create custom aliases for styles.
+
+```js
+const colors = require('ansi-colors');
+
+colors.alias('primary', colors.yellow);
+colors.alias('secondary', colors.bold);
+
+console.log(colors.primary.secondary('Foo'));
+```
+
+## Themes
+
+A theme is an object of custom aliases.
+
+```js
+const colors = require('ansi-colors');
+
+colors.theme({
+  danger: colors.red,
+  dark: colors.dim.gray,
+  disabled: colors.gray,
+  em: colors.italic,
+  heading: colors.bold.underline,
+  info: colors.cyan,
+  muted: colors.dim,
+  primary: colors.blue,
+  strong: colors.bold,
+  success: colors.green,
+  underline: colors.underline,
+  warning: colors.yellow
+});
+
+// Now, we can use our custom styles alongside the built-in styles!
+console.log(colors.danger.strong.em('Error!'));
+console.log(colors.warning('Heads up!'));
+console.log(colors.info('Did you know...'));
+console.log(colors.success.bold('It worked!'));
+```
+
+## Performance
+
+**Libraries tested**
+
+* ansi-colors v3.0.4
+* chalk v2.4.1
+
+### Mac
+
+> MacBook Pro, Intel Core i7, 2.3 GHz, 16 GB.
+
+**Load time**
+
+Time it takes to load the first time `require()` is called:
+
+* ansi-colors - `1.915ms`
+* chalk - `12.437ms`
+
+**Benchmarks**
+
+```
+# All Colors
+  ansi-colors x 173,851 ops/sec ±0.42% (91 runs sampled)
+  chalk x 9,944 ops/sec ±2.53% (81 runs sampled)))
+
+# Chained colors
+  ansi-colors x 20,791 ops/sec ±0.60% (88 runs sampled)
+  chalk x 2,111 ops/sec ±2.34% (83 runs sampled)
+
+# Nested colors
+  ansi-colors x 59,304 ops/sec ±0.98% (92 runs sampled)
+  chalk x 4,590 ops/sec ±2.08% (82 runs sampled)
+```
+
+### Windows
+
+> Windows 10, Intel Core i7-7700k CPU @ 4.2 GHz, 32 GB
+
+**Load time**
+
+Time it takes to load the first time `require()` is called:
+
+* ansi-colors - `1.494ms`
+* chalk - `11.523ms`
+
+**Benchmarks**
+
+```
+# All Colors
+  ansi-colors x 193,088 ops/sec ±0.51% (95 runs sampled))
+  chalk x 9,612 ops/sec ±3.31% (77 runs sampled)))
+
+# Chained colors
+  ansi-colors x 26,093 ops/sec ±1.13% (94 runs sampled)
+  chalk x 2,267 ops/sec ±2.88% (80 runs sampled))
+
+# Nested colors
+  ansi-colors x 67,747 ops/sec ±0.49% (93 runs sampled)
+  chalk x 4,446 ops/sec ±3.01% (82 runs sampled))
+```
+
+## About
+
+<details>
+<summary><strong>Contributing</strong></summary>
+
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](../../issues/new).
+
+</details>
+
+<details>
+<summary><strong>Running Tests</strong></summary>
+
+Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command:
+
+```sh
+$ npm install && npm test
+```
+
+</details>
+
+<details>
+<summary><strong>Building docs</strong></summary>
+
+_(This project's readme.md is generated by [verb](https://github.com/verbose/verb-generate-readme), please don't edit the readme directly. Any changes to the readme must be made in the [.verb.md](.verb.md) readme template.)_
+
+To generate the readme, run the following command:
+
+```sh
+$ npm install -g verbose/verb#dev verb-generate-readme && verb
+```
+
+</details>
+
+### Related projects
+
+You might also be interested in these projects:
+
+* [ansi-wrap](https://www.npmjs.com/package/ansi-wrap): Create ansi colors by passing the open and close codes. | [homepage](https://github.com/jonschlinkert/ansi-wrap "Create ansi colors by passing the open and close codes.")
+* [strip-color](https://www.npmjs.com/package/strip-color): Strip ANSI color codes from a string. No dependencies. | [homepage](https://github.com/jonschlinkert/strip-color "Strip ANSI color codes from a string. No dependencies.")
+
+### Contributors
+
+| **Commits** | **Contributor** |  
+| --- | --- |  
+| 48 | [jonschlinkert](https://github.com/jonschlinkert) |  
+| 42 | [doowb](https://github.com/doowb) |  
+| 6  | [lukeed](https://github.com/lukeed) |  
+| 2  | [Silic0nS0ldier](https://github.com/Silic0nS0ldier) |  
+| 1  | [dwieeb](https://github.com/dwieeb) |  
+| 1  | [jorgebucaran](https://github.com/jorgebucaran) |  
+| 1  | [madhavarshney](https://github.com/madhavarshney) |  
+| 1  | [chapterjason](https://github.com/chapterjason) |  
+
+### Author
+
+**Brian Woodward**
+
+* [GitHub Profile](https://github.com/doowb)
+* [Twitter Profile](https://twitter.com/doowb)
+* [LinkedIn Profile](https://linkedin.com/in/woodwardbrian)
+
+### License
+
+Copyright © 2019, [Brian Woodward](https://github.com/doowb).
+Released under the [MIT License](LICENSE).
+
+***
+
+_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.8.0, on July 01, 2019._
