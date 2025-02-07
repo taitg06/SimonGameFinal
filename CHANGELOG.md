@@ -1,147 +1,216 @@
 # Changelog
 
-## [0.11.0](https://github.com/pkgjs/parseargs/compare/v0.10.0...v0.11.0) (2022-10-08)
+All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Features
 
-* add `default` option parameter ([#142](https://github.com/pkgjs/parseargs/issues/142)) ([cd20847](https://github.com/pkgjs/parseargs/commit/cd20847a00b2f556aa9c085ac83b942c60868ec1))
+## [2.0.1] - 2020-08-29
+### Fixed
+- Fix issue with `process.argv` when used with interpreters (`coffee`, `ts-node`, etc.), #150.
 
-## [0.10.0](https://github.com/pkgjs/parseargs/compare/v0.9.1...v0.10.0) (2022-07-21)
 
+## [2.0.0] - 2020-08-14
+### Changed
+- Full rewrite. Now port from python 3.9.0 & more precise following.
+  See [doc](./doc) for difference and migration info.
+- node.js 10+ required
+- Removed most of local docs in favour of original ones.
 
-### Features
 
-* add parsed meta-data to returned properties ([#129](https://github.com/pkgjs/parseargs/issues/129)) ([91bfb4d](https://github.com/pkgjs/parseargs/commit/91bfb4d3f7b6937efab1b27c91c45d1205f1497e))
+## [1.0.10] - 2018-02-15
+### Fixed
+- Use .concat instead of + for arrays, #122.
 
-## [0.9.1](https://github.com/pkgjs/parseargs/compare/v0.9.0...v0.9.1) (2022-06-20)
 
+## [1.0.9] - 2016-09-29
+### Changed
+- Rerelease after 1.0.8 - deps cleanup.
 
-### Bug Fixes
 
-* **runtime:** support node 14+ ([#135](https://github.com/pkgjs/parseargs/issues/135)) ([6a1c5a6](https://github.com/pkgjs/parseargs/commit/6a1c5a6f7cadf2f035e004027e2742e3c4ce554b))
+## [1.0.8] - 2016-09-29
+### Changed
+- Maintenance (deps bump, fix node 6.5+ tests, coverage report).
 
-## [0.9.0](https://github.com/pkgjs/parseargs/compare/v0.8.0...v0.9.0) (2022-05-23)
 
+## [1.0.7] - 2016-03-17
+### Changed
+- Teach `addArgument` to accept string arg names. #97, @tomxtobin.
 
-### ⚠ BREAKING CHANGES
 
-* drop handling of electron arguments (#121)
+## [1.0.6] - 2016-02-06
+### Changed
+- Maintenance: moved to eslint & updated CS.
 
-### Code Refactoring
 
-* drop handling of electron arguments ([#121](https://github.com/pkgjs/parseargs/issues/121)) ([a2ffd53](https://github.com/pkgjs/parseargs/commit/a2ffd537c244a062371522b955acb45a404fc9f2))
+## [1.0.5] - 2016-02-05
+### Changed
+- Removed lodash dependency to significantly reduce install size.
+  Thanks to @mourner.
 
-## [0.8.0](https://github.com/pkgjs/parseargs/compare/v0.7.1...v0.8.0) (2022-05-16)
 
+## [1.0.4] - 2016-01-17
+### Changed
+- Maintenance: lodash update to 4.0.0.
 
-### ⚠ BREAKING CHANGES
 
-* switch type:string option arguments to greedy, but with error for suspect cases in strict mode (#88)
-* positionals now opt-in when strict:true (#116)
-* create result.values with null prototype (#111)
+## [1.0.3] - 2015-10-27
+### Fixed
+- Fix parse `=` in args: `--examplepath="C:\myfolder\env=x64"`. #84, @CatWithApple.
 
-### Features
 
-* create result.values with null prototype ([#111](https://github.com/pkgjs/parseargs/issues/111)) ([9d539c3](https://github.com/pkgjs/parseargs/commit/9d539c3d57f269c160e74e0656ad4fa84ff92ec2))
-* positionals now opt-in when strict:true ([#116](https://github.com/pkgjs/parseargs/issues/116)) ([3643338](https://github.com/pkgjs/parseargs/commit/364333826b746e8a7dc5505b4b22fd19ac51df3b))
-* switch type:string option arguments to greedy, but with error for suspect cases in strict mode ([#88](https://github.com/pkgjs/parseargs/issues/88)) ([c2b5e72](https://github.com/pkgjs/parseargs/commit/c2b5e72161991dfdc535909f1327cc9b970fe7e8))
+## [1.0.2] - 2015-03-22
+### Changed
+- Relaxed lodash version dependency.
 
-### [0.7.1](https://github.com/pkgjs/parseargs/compare/v0.7.0...v0.7.1) (2022-04-15)
 
+## [1.0.1] - 2015-02-20
+### Changed
+- Changed dependencies to be compatible with ancient nodejs.
 
-### Bug Fixes
 
-* resist pollution ([#106](https://github.com/pkgjs/parseargs/issues/106)) ([ecf2dec](https://github.com/pkgjs/parseargs/commit/ecf2dece0a9f2a76d789384d5d71c68ffe64022a))
+## [1.0.0] - 2015-02-19
+### Changed
+- Maintenance release.
+- Replaced `underscore` with `lodash`.
+- Bumped version to 1.0.0 to better reflect semver meaning.
+- HISTORY.md -> CHANGELOG.md
 
-## [0.7.0](https://github.com/pkgjs/parseargs/compare/v0.6.0...v0.7.0) (2022-04-13)
 
+## [0.1.16] - 2013-12-01
+### Changed
+- Maintenance release. Updated dependencies and docs.
 
-### Features
 
-* Add strict mode to parser ([#74](https://github.com/pkgjs/parseargs/issues/74)) ([8267d02](https://github.com/pkgjs/parseargs/commit/8267d02083a87b8b8a71fcce08348d1e031ea91c))
+## [0.1.15] - 2013-05-13
+### Fixed
+- Fixed #55, @trebor89
 
-## [0.6.0](https://github.com/pkgjs/parseargs/compare/v0.5.0...v0.6.0) (2022-04-11)
 
+## [0.1.14] - 2013-05-12
+### Fixed
+- Fixed #62, @maxtaco
 
-### ⚠ BREAKING CHANGES
 
-* rework results to remove redundant `flags` property and store value true for boolean options (#83)
-* switch to existing ERR_INVALID_ARG_VALUE (#97)
+## [0.1.13] - 2013-04-08
+### Changed
+- Added `.npmignore` to reduce package size
 
-### Code Refactoring
 
-* rework results to remove redundant `flags` property and store value true for boolean options ([#83](https://github.com/pkgjs/parseargs/issues/83)) ([be153db](https://github.com/pkgjs/parseargs/commit/be153dbed1d488cb7b6e27df92f601ba7337713d))
-* switch to existing ERR_INVALID_ARG_VALUE ([#97](https://github.com/pkgjs/parseargs/issues/97)) ([084a23f](https://github.com/pkgjs/parseargs/commit/084a23f9fde2da030b159edb1c2385f24579ce40))
+## [0.1.12] - 2013-02-10
+### Fixed
+- Fixed conflictHandler (#46), @hpaulj
 
-## [0.5.0](https://github.com/pkgjs/parseargs/compare/v0.4.0...v0.5.0) (2022-04-10)
 
+## [0.1.11] - 2013-02-07
+### Added
+- Added 70+ tests (ported from python), @hpaulj
+- Added conflictHandler, @applepicke
+- Added fromfilePrefixChar, @hpaulj
 
-### ⚠ BREAKING CHANGES
+### Fixed
+- Multiple bugfixes, @hpaulj
 
-* Require type to be specified for each supplied option (#95)
 
-### Features
+## [0.1.10] - 2012-12-30
+### Added
+- Added [mutual exclusion](http://docs.python.org/dev/library/argparse.html#mutual-exclusion)
+  support, thanks to @hpaulj
 
-* Require type to be specified for each supplied option ([#95](https://github.com/pkgjs/parseargs/issues/95)) ([02cd018](https://github.com/pkgjs/parseargs/commit/02cd01885b8aaa59f2db8308f2d4479e64340068))
+### Fixed
+- Fixed options check for `storeConst` & `appendConst` actions, thanks to @hpaulj
 
-## [0.4.0](https://github.com/pkgjs/parseargs/compare/v0.3.0...v0.4.0) (2022-03-12)
 
+## [0.1.9] - 2012-12-27
+### Fixed
+- Fixed option dest interferens with other options (issue #23), thanks to @hpaulj
+- Fixed default value behavior with `*` positionals, thanks to @hpaulj
+- Improve `getDefault()` behavior, thanks to @hpaulj
+- Improve negative argument parsing, thanks to @hpaulj
 
-### ⚠ BREAKING CHANGES
 
-* parsing, revisit short option groups, add support for combined short and value (#75)
-* restructure configuration to take options bag (#63)
+## [0.1.8] - 2012-12-01
+### Fixed
+- Fixed parser parents (issue #19), thanks to @hpaulj
+- Fixed negative argument parse (issue #20), thanks to @hpaulj
 
-### Code Refactoring
 
-* parsing, revisit short option groups, add support for combined short and value ([#75](https://github.com/pkgjs/parseargs/issues/75)) ([a92600f](https://github.com/pkgjs/parseargs/commit/a92600fa6c214508ab1e016fa55879a314f541af))
-* restructure configuration to take options bag ([#63](https://github.com/pkgjs/parseargs/issues/63)) ([b412095](https://github.com/pkgjs/parseargs/commit/b4120957d90e809ee8b607b06e747d3e6a6b213e))
+## [0.1.7] - 2012-10-14
+### Fixed
+- Fixed 'choices' argument parse (issue #16)
+- Fixed stderr output (issue #15)
 
-## [0.3.0](https://github.com/pkgjs/parseargs/compare/v0.2.0...v0.3.0) (2022-02-06)
 
+## [0.1.6] - 2012-09-09
+### Fixed
+- Fixed check for conflict of options (thanks to @tomxtobin)
 
-### Features
 
-* **parser:** support short-option groups ([#59](https://github.com/pkgjs/parseargs/issues/59)) ([882067b](https://github.com/pkgjs/parseargs/commit/882067bc2d7cbc6b796f8e5a079a99bc99d4e6ba))
+## [0.1.5] - 2012-09-03
+### Fixed
+- Fix parser #setDefaults method (thanks to @tomxtobin)
 
-## [0.2.0](https://github.com/pkgjs/parseargs/compare/v0.1.1...v0.2.0) (2022-02-05)
 
+## [0.1.4] - 2012-07-30
+### Fixed
+- Fixed pseudo-argument support (thanks to @CGamesPlay)
+- Fixed addHelp default (should be true), if not set (thanks to @benblank)
 
-### Features
 
-* basic support for shorts ([#50](https://github.com/pkgjs/parseargs/issues/50)) ([a2f36d7](https://github.com/pkgjs/parseargs/commit/a2f36d7da4145af1c92f76806b7fe2baf6beeceb))
+## [0.1.3] - 2012-06-27
+### Fixed
+- Fixed formatter api name: Formatter -> HelpFormatter
 
 
-### Bug Fixes
+## [0.1.2] - 2012-05-29
+### Fixed
+- Removed excess whitespace in help
+- Fixed error reporting, when parcer with subcommands
+  called with empty arguments
 
-* always store value for a=b ([#43](https://github.com/pkgjs/parseargs/issues/43)) ([a85e8dc](https://github.com/pkgjs/parseargs/commit/a85e8dc06379fd2696ee195cc625de8fac6aee42))
-* support single dash as positional ([#49](https://github.com/pkgjs/parseargs/issues/49)) ([d795bf8](https://github.com/pkgjs/parseargs/commit/d795bf877d068fd67aec381f30b30b63f97109ad))
+### Added
+- Added basic tests
 
-### [0.1.1](https://github.com/pkgjs/parseargs/compare/v0.1.0...v0.1.1) (2022-01-25)
 
+## [0.1.1] - 2012-05-23
+### Fixed
+- Fixed line wrapping in help formatter
+- Added better error reporting on invalid arguments
 
-### Bug Fixes
 
-* only use arrays in results for multiples ([#42](https://github.com/pkgjs/parseargs/issues/42)) ([c357584](https://github.com/pkgjs/parseargs/commit/c357584847912506319ed34a0840080116f4fd65))
+## [0.1.0] - 2012-05-16
+### Added
+- First release.
 
-## 0.1.0 (2022-01-22)
 
-
-### Features
-
-* expand scenarios covered by default arguments for environments ([#20](https://github.com/pkgjs/parseargs/issues/20)) ([582ada7](https://github.com/pkgjs/parseargs/commit/582ada7be0eca3a73d6e0bd016e7ace43449fa4c))
-* update readme and include contributing guidelines ([8edd6fc](https://github.com/pkgjs/parseargs/commit/8edd6fc863cd705f6fac732724159ebe8065a2b0))
-
-
-### Bug Fixes
-
-* do not strip excess leading dashes on long option names ([#21](https://github.com/pkgjs/parseargs/issues/21)) ([f848590](https://github.com/pkgjs/parseargs/commit/f848590ebf3249ed5979ff47e003fa6e1a8ec5c0))
-* name & readme ([3f057c1](https://github.com/pkgjs/parseargs/commit/3f057c1b158a1bdbe878c64b57460c58e56e465f))
-* package.json values ([9bac300](https://github.com/pkgjs/parseargs/commit/9bac300e00cd76c77076bf9e75e44f8929512da9))
-* update readme name ([957d8d9](https://github.com/pkgjs/parseargs/commit/957d8d96e1dcb48297c0a14345d44c0123b2883e))
-
-
-### Build System
-
-* first release as minor ([421c6e2](https://github.com/pkgjs/parseargs/commit/421c6e2569a8668ad14fac5a5af5be60479a7571))
+[2.0.1]: https://github.com/nodeca/argparse/compare/2.0.0...2.0.1
+[2.0.0]: https://github.com/nodeca/argparse/compare/1.0.10...2.0.0
+[1.0.10]: https://github.com/nodeca/argparse/compare/1.0.9...1.0.10
+[1.0.9]: https://github.com/nodeca/argparse/compare/1.0.8...1.0.9
+[1.0.8]: https://github.com/nodeca/argparse/compare/1.0.7...1.0.8
+[1.0.7]: https://github.com/nodeca/argparse/compare/1.0.6...1.0.7
+[1.0.6]: https://github.com/nodeca/argparse/compare/1.0.5...1.0.6
+[1.0.5]: https://github.com/nodeca/argparse/compare/1.0.4...1.0.5
+[1.0.4]: https://github.com/nodeca/argparse/compare/1.0.3...1.0.4
+[1.0.3]: https://github.com/nodeca/argparse/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/nodeca/argparse/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/nodeca/argparse/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/nodeca/argparse/compare/0.1.16...1.0.0
+[0.1.16]: https://github.com/nodeca/argparse/compare/0.1.15...0.1.16
+[0.1.15]: https://github.com/nodeca/argparse/compare/0.1.14...0.1.15
+[0.1.14]: https://github.com/nodeca/argparse/compare/0.1.13...0.1.14
+[0.1.13]: https://github.com/nodeca/argparse/compare/0.1.12...0.1.13
+[0.1.12]: https://github.com/nodeca/argparse/compare/0.1.11...0.1.12
+[0.1.11]: https://github.com/nodeca/argparse/compare/0.1.10...0.1.11
+[0.1.10]: https://github.com/nodeca/argparse/compare/0.1.9...0.1.10
+[0.1.9]: https://github.com/nodeca/argparse/compare/0.1.8...0.1.9
+[0.1.8]: https://github.com/nodeca/argparse/compare/0.1.7...0.1.8
+[0.1.7]: https://github.com/nodeca/argparse/compare/0.1.6...0.1.7
+[0.1.6]: https://github.com/nodeca/argparse/compare/0.1.5...0.1.6
+[0.1.5]: https://github.com/nodeca/argparse/compare/0.1.4...0.1.5
+[0.1.4]: https://github.com/nodeca/argparse/compare/0.1.3...0.1.4
+[0.1.3]: https://github.com/nodeca/argparse/compare/0.1.2...0.1.3
+[0.1.2]: https://github.com/nodeca/argparse/compare/0.1.1...0.1.2
+[0.1.1]: https://github.com/nodeca/argparse/compare/0.1.0...0.1.1
+[0.1.0]: https://github.com/nodeca/argparse/releases/tag/0.1.0
