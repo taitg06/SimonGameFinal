@@ -1,14 +1,13 @@
-import chai from './index.js';
+// Bootstrap cliui with CommonJS dependencies:
+import { cliui } from './build/lib/index.js'
+import { wrap, stripAnsi } from './build/lib/string-utils.js'
 
-export const expect = chai.expect;
-export const version = chai.version;
-export const Assertion = chai.Assertion;
-export const AssertionError = chai.AssertionError;
-export const util = chai.util;
-export const config = chai.config;
-export const use = chai.use;
-export const should = chai.should;
-export const assert = chai.assert;
-export const core = chai.core;
-
-export default chai;
+export default function ui (opts) {
+  return cliui(opts, {
+    stringWidth: (str) => {
+      return [...str].length
+    },
+    stripAnsi,
+    wrap
+  })
+}

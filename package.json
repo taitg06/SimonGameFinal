@@ -1,70 +1,73 @@
 {
-  "name": "chokidar",
-  "description": "Minimal and efficient cross-platform file watching library",
-  "version": "3.6.0",
-  "homepage": "https://github.com/paulmillr/chokidar",
-  "author": "Paul Miller (https://paulmillr.com)",
-  "contributors": [
-    "Paul Miller (https://paulmillr.com)",
-    "Elan Shanker"
+  "name": "cross-spawn",
+  "version": "7.0.6",
+  "description": "Cross platform child_process#spawn and child_process#spawnSync",
+  "keywords": [
+    "spawn",
+    "spawnSync",
+    "windows",
+    "cross-platform",
+    "path-ext",
+    "shebang",
+    "cmd",
+    "execute"
   ],
-  "engines": {
-    "node": ">= 8.10.0"
-  },
-  "main": "index.js",
-  "types": "./types/index.d.ts",
-  "dependencies": {
-    "anymatch": "~3.1.2",
-    "braces": "~3.0.2",
-    "glob-parent": "~5.1.2",
-    "is-binary-path": "~2.1.0",
-    "is-glob": "~4.0.1",
-    "normalize-path": "~3.0.0",
-    "readdirp": "~3.6.0"
-  },
-  "optionalDependencies": {
-    "fsevents": "~2.3.2"
-  },
-  "devDependencies": {
-    "@types/node": "^14",
-    "chai": "^4.3",
-    "dtslint": "^3.3.0",
-    "eslint": "^7.0.0",
-    "mocha": "^7.0.0",
-    "rimraf": "^3.0.0",
-    "sinon": "^9.0.1",
-    "sinon-chai": "^3.3.0",
-    "typescript": "^4.4.3",
-    "upath": "^1.2.0"
-  },
-  "files": [
-    "index.js",
-    "lib/*.js",
-    "types/index.d.ts"
-  ],
+  "author": "André Cruz <andre@moxy.studio>",
+  "homepage": "https://github.com/moxystudio/node-cross-spawn",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paulmillr/chokidar.git"
-  },
-  "bugs": {
-    "url": "https://github.com/paulmillr/chokidar/issues"
+    "url": "git@github.com:moxystudio/node-cross-spawn.git"
   },
   "license": "MIT",
-  "scripts": {
-    "dtslint": "dtslint types",
-    "lint": "eslint --report-unused-disable-directives --ignore-path .gitignore .",
-    "build": "npm ls",
-    "mocha": "mocha --exit --timeout 90000",
-    "test": "npm run lint && npm run mocha"
-  },
-  "keywords": [
-    "fs",
-    "watch",
-    "watchFile",
-    "watcher",
-    "watching",
-    "file",
-    "fsevents"
+  "main": "index.js",
+  "files": [
+    "lib"
   ],
-  "funding": "https://paulmillr.com/funding/"
+  "scripts": {
+    "lint": "eslint .",
+    "test": "jest --env node --coverage",
+    "prerelease": "npm t && npm run lint",
+    "release": "standard-version",
+    "postrelease": "git push --follow-tags origin HEAD && npm publish"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "dependencies": {
+    "path-key": "^3.1.0",
+    "shebang-command": "^2.0.0",
+    "which": "^2.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.9.0",
+    "babel-preset-moxy": "^3.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-moxy": "^7.1.0",
+    "husky": "^3.0.5",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.5",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^3.0.0",
+    "standard-version": "^9.5.0"
+  },
+  "engines": {
+    "node": ">= 8"
+  }
 }
