@@ -4,10 +4,10 @@ var parseColor = require('../parsers').parseColor;
 
 module.exports.definition = {
   set: function (v) {
-    this._setProperty('color', parseColor(v));
+    this._setProperty('flood-color', parseColor(v));
   },
   get: function () {
-    return this.getPropertyValue('color');
+    return this.getPropertyValue('flood-color');
   },
   enumerable: true,
   configurable: true,

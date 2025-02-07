@@ -1,89 +1,62 @@
-# cross-spawn
+# Parse `data:` URLs
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Build status][appveyor-image]][appveyor-url]
-
-[npm-url]:https://npmjs.org/package/cross-spawn
-[downloads-image]:https://img.shields.io/npm/dm/cross-spawn.svg
-[npm-image]:https://img.shields.io/npm/v/cross-spawn.svg
-[ci-url]:https://github.com/moxystudio/node-cross-spawn/actions/workflows/ci.yaml
-[ci-image]:https://github.com/moxystudio/node-cross-spawn/actions/workflows/ci.yaml/badge.svg
-[appveyor-url]:https://ci.appveyor.com/project/satazor/node-cross-spawn
-[appveyor-image]:https://img.shields.io/appveyor/ci/satazor/node-cross-spawn/master.svg
-
-A cross platform solution to node's spawn and spawnSync.
-
-## Installation
-
-Node.js version 8 and up:
-`$ npm install cross-spawn`
-
-Node.js version 7 and under:
-`$ npm install cross-spawn@6`
-
-## Why
-
-Node has issues when using spawn on Windows:
-
-- It ignores [PATHEXT](https://github.com/joyent/node/issues/2318)
-- It does not support [shebangs](https://en.wikipedia.org/wiki/Shebang_(Unix))
-- Has problems running commands with [spaces](https://github.com/nodejs/node/issues/7367)
-- Has problems running commands with posix relative paths (e.g.: `./my-folder/my-executable`)
-- Has an [issue](https://github.com/moxystudio/node-cross-spawn/issues/82) with command shims (files in `node_modules/.bin/`), where arguments with quotes and parenthesis would result in [invalid syntax error](https://github.com/moxystudio/node-cross-spawn/blob/e77b8f22a416db46b6196767bcd35601d7e11d54/test/index.test.js#L149)
-- No `options.shell` support on node `<v4.8`
-
-All these issues are handled correctly by `cross-spawn`.
-There are some known modules, such as [win-spawn](https://github.com/ForbesLindesay/win-spawn), that try to solve this but they are either broken or provide faulty escaping of shell arguments.
-
-
-## Usage
-
-Exactly the same way as node's [`spawn`](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options) or [`spawnSync`](https://nodejs.org/api/child_process.html#child_process_child_process_spawnsync_command_args_options), so it's a drop in replacement.
-
+This package helps you parse `data:` URLs [according to the WHATWG Fetch Standard](https://fetch.spec.whatwg.org/#data-urls):
 
 ```js
-const spawn = require('cross-spawn');
+const parseDataURL = require("data-urls");
 
-// Spawn NPM asynchronously
-const child = spawn('npm', ['list', '-g', '-depth', '0'], { stdio: 'inherit' });
+const textExample = parseDataURL("data:,Hello%2C%20World!");
+console.log(textExample.mimeType.toString()); // "text/plain;charset=US-ASCII"
+console.log(textExample.body);                // Uint8Array(13) [ 72, 101, 108, 108, 111, 44, … ]
 
-// Spawn NPM synchronously
-const result = spawn.sync('npm', ['list', '-g', '-depth', '0'], { stdio: 'inherit' });
+const htmlExample = parseDataURL("data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E");
+console.log(htmlExample.mimeType.toString()); // "text/html"
+console.log(htmlExample.body);                // Uint8Array(22) [ 60, 104, 49, 62, 72, 101, … ]
+
+const pngExample = parseDataURL("data:image/png;base64,iVBORw0KGgoAAA" +
+                                "ANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4" +
+                                "//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU" +
+                                "5ErkJggg==");
+console.log(pngExample.mimeType.toString()); // "image/png"
+console.log(pngExample.body);                // Uint8Array(85) [ 137, 80, 78, 71, 13, 10, … ]
 ```
 
+## API
 
-## Caveats
+This package's main module's default export is a function that accepts a string and returns a `{ mimeType, body }` object, or `null` if the result cannot be parsed as a `data:` URL.
 
-### Using `options.shell` as an alternative to `cross-spawn`
+- The `mimeType` property is an instance of [whatwg-mimetype](https://www.npmjs.com/package/whatwg-mimetype)'s `MIMEType` class.
+- The `body` property is a `Uint8Array` instance.
 
-Starting from node `v4.8`, `spawn` has a `shell` option that allows you run commands from within a shell. This new option solves
-the [PATHEXT](https://github.com/joyent/node/issues/2318) issue but:
+As shown in the examples above, you can easily get a stringified version of the MIME type using its `toString()` method. Read on for more on getting the stringified version of the body.
 
-- It's not supported in node `<v4.8`
-- You must manually escape the command and arguments which is very error prone, specially when passing user input
-- There are a lot of other unresolved issues from the [Why](#why) section that you must take into account
+### Decoding the body
 
-If you are using the `shell` option to spawn a command in a cross platform way, consider using `cross-spawn` instead. You have been warned.
+To decode the body bytes of a parsed data URL, you'll need to use the `charset` parameter of the MIME type, if any. This contains an encoding [label](https://encoding.spec.whatwg.org/#label); there are [various possible labels](https://encoding.spec.whatwg.org/#names-and-labels) for a given encoding. We suggest using the [whatwg-encoding](https://www.npmjs.com/package/whatwg-encoding) package as follows:
 
-### `options.shell` support
+```js
+const parseDataURL = require("data-urls");
+const { labelToName, decode } = require("whatwg-encoding");
 
-While `cross-spawn` adds support for `options.shell` in node `<v4.8`, all of its enhancements are disabled.
+const dataURL = parseDataURL(arbitraryString);
 
-This mimics the Node.js behavior. More specifically, the command and its arguments will not be automatically escaped nor shebang support will be offered. This is by design because if you are using `options.shell` you are probably targeting a specific platform anyway and you don't want things to get into your way.
+// If there's no charset parameter, let's just hope it's UTF-8; that seems like a good guess.
+const encodingName = labelToName(dataURL.mimeType.parameters.get("charset") || "utf-8");
+const bodyDecoded = decode(dataURL.body, encodingName);
+```
 
-### Shebangs support
+This is especially important since the default, if no parseable MIME type is given, is "US-ASCII", [aka windows-1252](https://encoding.spec.whatwg.org/#names-and-labels), not UTF-8 like you might asume. So for example given an `arbitraryString` of `"data:,Héllo!"`, the above code snippet will correctly produce a `bodyDecoded` of `"Héllo!"` by using the windows-1252 decoder, whereas if you used a UTF-8 decoder you'd get back `"HÃ©llo!"`.
 
-While `cross-spawn` handles shebangs on Windows, its support is limited. More specifically, it just supports `#!/usr/bin/env <program>` where `<program>` must not contain any arguments.   
-If you would like to have the shebang support improved, feel free to contribute via a pull-request.
+### Advanced functionality: parsing from a URL record
 
-Remember to always test your code on Windows!
+If you are using the [whatwg-url](https://github.com/jsdom/whatwg-url) package, you may already have a "URL record" object on hand, as produced by that package's `parseURL` export. In that case, you can use this package's `fromURLRecord` export to save a bit of work:
 
+```js
+const { parseURL } = require("whatwg-url");
+const dataURLFromURLRecord = require("data-urls").fromURLRecord;
 
-## Tests
+const urlRecord = parseURL("data:,Hello%2C%20World!");
+const dataURL = dataURLFromURLRecord(urlRecord);
+```
 
-`$ npm test`   
-`$ npm test -- --watch` during development
-
-
-## License
-
-Released under the [MIT License](https://www.opensource.org/licenses/mit-license.php).
+In practice, we expect this functionality only to be used by consumers like [jsdom](https://www.npmjs.com/package/jsdom), which are using these packages at a very low level.
