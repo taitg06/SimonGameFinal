@@ -1,72 +1,36 @@
 {
-  "name": "@asamuzakjp/css-color",
-  "description": "CSS color - Resolve and convert CSS colors.",
-  "author": "asamuzaK",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/asamuzaK/cssColor.git"
+  "name": "@pkgjs/parseargs",
+  "version": "0.11.0",
+  "description": "Polyfill of future proposal for `util.parseArgs()`",
+  "engines": {
+    "node": ">=14"
   },
-  "homepage": "https://github.com/asamuzaK/cssColor#readme",
-  "bugs": {
-    "url": "https://github.com/asamuzaK/cssColor/issues"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "packageManager": "pnpm@9.15.3",
-  "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/esm/index.js",
+  "main": "index.js",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
-      }
-    },
+    ".": "./index.js",
     "./package.json": "./package.json"
   },
-  "dependencies": {
-    "@csstools/css-calc": "^2.1.1",
-    "@csstools/css-color-parser": "^3.0.7",
-    "@csstools/css-parser-algorithms": "^3.0.4",
-    "@csstools/css-tokenizer": "^3.0.3",
-    "lru-cache": "^10.4.3"
-  },
-  "devDependencies": {
-    "@tanstack/config": "^0.15.1",
-    "@vitest/coverage-istanbul": "^2.1.8",
-    "esbuild": "^0.24.2",
-    "eslint": "^9.18.0",
-    "knip": "^5.42.0",
-    "neostandard": "^0.12.0",
-    "prettier": "^3.4.2",
-    "publint": "^0.3.2",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.7",
-    "vitest": "^2.1.8"
-  },
   "scripts": {
-    "build": "pnpm run build:rest && pnpm run build:min",
-    "build:min": "vite build -c vite.browser.config.ts",
-    "build:rest": "vite build",
-    "clean": "rimraf ./dist && rimraf ./coverage",
-    "prettier": "prettier --ignore-unknown .",
-    "prettier:write": "pnpm run prettier --write",
-    "test": "pnpm run  \"/^test:.*/\" && pnpm run build && pnpm run publint",
-    "publint": "publint --strict",
-    "test:lib": "vitest",
-    "test:eslint": "eslint ./src ./tests",
-    "test:knip": "knip",
-    "test:types": "tsc"
+    "coverage": "c8 --check-coverage tape 'test/*.js'",
+    "test": "c8 tape 'test/*.js'",
+    "posttest": "eslint .",
+    "fix": "npm run posttest -- --fix"
   },
-  "version": "2.8.3"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pkgjs/parseargs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pkgjs/parseargs/issues"
+  },
+  "homepage": "https://github.com/pkgjs/parseargs#readme",
+  "devDependencies": {
+    "c8": "^7.10.0",
+    "eslint": "^8.2.0",
+    "eslint-plugin-node-core": "iansu/eslint-plugin-node-core",
+    "tape": "^5.2.2"
+  }
 }
